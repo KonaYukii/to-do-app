@@ -11,17 +11,18 @@ tasklist = []
 def to_do():
   return "This application is a to do list. You can add, delete, and update things."
 
-@app.route("/add", methods = ['POST'])
-def add_task():
-  req = request.json
-  tasklist.append(req['content'])
-  return req
+@app.route("/tasklist", methods = ['GET', 'POST'])
+def task():
+  if request.method == 'GET':
+    return jsonify(tasklist)
+  elif request.method == 'POST':
+    req = request.json
+    tasklist.append(req['content'])
+    return req
+# combined the get and post request together.
+# request.method is just specifying what you want to do since in the beginning you wrote get and post.
 
-@app.route("/tasklist", methods = ['GET'])
-def showlist():
-  return jsonify(tasklist)
-
-@app.route("/deletetask/<id>", methods = ['DELETE'])
+@app.route("/tasklist/id/<id>", methods = ['DELETE'])
 def deleteitem(id):
   id = int(id)
   try: 
@@ -32,7 +33,7 @@ def deleteitem(id):
 # Use try and except in case users type in an id that doesnt exist
 # Can only delete one at a time
 
-@app.route("/deleteword/<word>", methods = ["DELETE"])
+@app.route("/tasklist/word/<word>", methods = ["DELETE"])
 def deleteword(word):
   try:
     tasklist.remove(word)
@@ -41,3 +42,4 @@ def deleteword(word):
   return jsonify(tasklist)
 # cannot delete individual words. can delete the entire task. 
 # %20 for space. 
+# first word is written in the url. The second is the variable that you want to delete. Makes it easier for the user to read to see whats going on.
