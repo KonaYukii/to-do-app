@@ -17,7 +17,10 @@ def task():
     return jsonify(tasklist)
   elif request.method == 'POST':
     req = request.json
-    tasklist.append(req['content'])
+    try:
+      tasklist.append(req['content'])
+    except: 
+      return "You must use content"
     return req
 # combined the get and post request together.
 # request.method is just specifying what you want to do since in the beginning you wrote get and post.
@@ -48,8 +51,11 @@ def deleteword(word):
 def updateitem(id):
   id = int(id)
   try:
-    req = request.json
+    req = request.json 
     tasklist[id] = req['content']
   except:
-    return str(id) + " cannot be found thus cannot be updated"
+    return str(id) + " cannot be found thus cannot be updated or you must use content"
   return jsonify(tasklist)
+# use put for updaate. 
+# req is the new information that you're typing in.
+# tasklist[id] is replacing the old information with the new req[content]
