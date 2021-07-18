@@ -43,3 +43,13 @@ def deleteword(word):
 # cannot delete individual words. can delete the entire task. 
 # %20 for space. 
 # first word is written in the url. The second is the variable that you want to delete. Makes it easier for the user to read to see whats going on.
+
+@app.route("/tasklist/update/<id>", methods = ["PUT"])
+def updateitem(id):
+  id = int(id)
+  try:
+    req = request.json
+    tasklist[id] = req['content']
+  except:
+    return str(id) + " cannot be found thus cannot be updated"
+  return jsonify(tasklist)
