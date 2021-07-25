@@ -1,7 +1,7 @@
 from flask_sqlalchemy import SQLAlchemy
 from app import db
 
-class User(db.Model):
+class Task(db.Model):
   id = db.Column(db.Integer, primary_key=True)
   content = db.Column(db.String(100), unique=False, nullable=False)
 

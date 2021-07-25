@@ -9,5 +9,6 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
 from controllers import home, tasklist
+db.create_all()
 app.register_blueprint(home.bp)
 app.register_blueprint(tasklist.bp) 

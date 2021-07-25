@@ -1,21 +1,34 @@
 from flask import request, jsonify, Blueprint
-from models import Task
+from models.Task import Task
+from app import db
 # Flask is needed to build a web server using python.
 # Request tells flask where we're getting our data and telling it to read it
 # Jsonify provides us the form of our data
 
 bp = Blueprint('tasklist', __name__, url_prefix = '/tasklist')
 
-tasklist = []
-
 @bp.route("/", methods = ['GET', 'POST'])
 def task():
   if request.method == 'GET':
+    tasks = Task.query.all()
+    # SELECT * from Task
+    tasklist = [] 
+    # To show the user the tasklist they created
+    for task in tasks:
+      # running through each task in the variable tasks
+      tasklist.append(task.content)
+      # adding each task content to the tasklist
     return jsonify(tasklist)
   elif request.method == 'POST':
     req = request.json
+    # gets what you wrote in the body and stores it in the variable req
     try:
-      tasklist.append(req['content'])
+      task = Task(content = req['content'])
+      # gets the content of the req and puts it in the content argument which belongs to the Task Model.
+      db.session.add(task)
+      # preparing the task to the database
+      db.session.commit()
+      # add the req[content] to the database
     except: 
       return "You must use content"
     return req
