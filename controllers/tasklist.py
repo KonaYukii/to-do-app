@@ -77,9 +77,18 @@ def updateitem(id):
   id = int(id)
   try:
     req = request.json 
-    tasklist[id] = req['content']
+    task = Task.query.get(id)
+    # SELECT * FROM Task WHERE id = <id>
+    task.content = req['content']
+    # Replace current task content with req[content]
+    db.session.add(task)
+    db.session.commit()
   except:
     return str(id) + " cannot be found thus cannot be updated or you must use content"
+  tasks = Task.query.all()
+  tasklist = [] 
+  for task in tasks:
+    tasklist.append(task.content)
   return jsonify(tasklist)
 # use put for updaate. 
 # req is the new information that you're typing in.
