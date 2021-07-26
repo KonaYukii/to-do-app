@@ -39,9 +39,16 @@ def task():
 def deleteitem(id):
   id = int(id)
   try: 
-    tasklist.pop(id)
+    task = Task.query.get(id)
+    # SELECT * FROM Task WHERE id = <id>
+    db.session.delete(task)
+    db.session.commit()
   except: 
     return "No task with this " + str(id)
+  tasks = Task.query.all()
+  tasklist = [] 
+  for task in tasks:
+    tasklist.append(task.content)
   return jsonify(tasklist)
 # Use try and except in case users type in an id that doesnt exist
 # Can only delete one at a time
@@ -49,9 +56,17 @@ def deleteitem(id):
 @bp.route("/word/<word>", methods = ["DELETE"])
 def deleteword(word):
   try:
-    tasklist.remove(word)
+    tasks = Task.query.filter_by(content = word).all()
+    # SELECT * FROM Task WHERE content = <word>
+    for task in tasks:
+      db.session.delete(task)
+    db.session.commit()
   except:
     return word + " does not exist in list"
+  tasks = Task.query.all()
+  tasklist = [] 
+  for task in tasks:
+    tasklist.append(task.content)
   return jsonify(tasklist)
 # cannot delete individual words. can delete the entire task. 
 # %20 for space. 
